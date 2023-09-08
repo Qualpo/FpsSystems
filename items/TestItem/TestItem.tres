@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Item" load_steps=4 format=3 uid="uid://dciosjudmvqqs"]
+
+[ext_resource type="PackedScene" uid="uid://cu25ggyasgnkq" path="res://items/TestItem/TestHeldItem.tscn" id="1_ftobs"]
+[ext_resource type="Texture2D" uid="uid://dntl0g8x1331j" path="res://textures/Missing.png" id="2_6se85"]
+[ext_resource type="Script" path="res://scripts/resources/Item.gd" id="2_p6jg0"]
+
+[resource]
+script = ExtResource("2_p6jg0")
+registry_name = "test_item"
+name = "TestItem"
+description = "TestItem"
+icon = ExtResource("2_6se85")
+icon_offset = Vector2(0, 0)
+held_scene = ExtResource("1_ftobs")

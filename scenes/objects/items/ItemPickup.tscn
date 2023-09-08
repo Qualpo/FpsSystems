@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c45cqdelyjihp"]
+
+[ext_resource type="Script" path="res://scripts/objects/items/ItemPickup.gd" id="1_ktb6u"]
+
+[node name="ItemPickup" type="Area3D"]
+collision_layer = 8
+collision_mask = 8
+monitoring = false
+script = ExtResource("1_ktb6u")
+
+[node name="Model" type="Node3D" parent="."]

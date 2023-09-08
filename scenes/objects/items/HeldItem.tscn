@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfl6ac0qt8jp5"]
+
+[ext_resource type="Script" path="res://scripts/objects/items/HeldItem.gd" id="1_ihrnc"]
+
+[node name="HeldItem" type="Node3D"]
+script = ExtResource("1_ihrnc")
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="PreviewCamera" type="Camera3D" parent="."]

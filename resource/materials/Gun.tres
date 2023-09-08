@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://d4lj5qksbom5n"]
+
+[ext_resource type="Texture2D" uid="uid://dwrlyxxryc6ps" path="res://textures/objects/pistol/Gun_Gun.png" id="1_dex3b"]
+
+[resource]
+cull_mode = 2
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("1_dex3b")
+texture_filter = 0

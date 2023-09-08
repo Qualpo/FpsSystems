@@ -1,0 +1,254 @@
+[gd_scene load_steps=16 format=3 uid="uid://dhlm0x0n72a44"]
+
+[ext_resource type="Script" path="res://scripts/objects/entities/Player.gd" id="1_lx1yv"]
+[ext_resource type="AudioStream" uid="uid://b8qum3210n0u3" path="res://audio/sfx/player/WalkTile.tres" id="2_63stx"]
+[ext_resource type="AudioStream" uid="uid://bio8xpu26qojx" path="res://audio/sfx/player/Jump.tres" id="3_4urpi"]
+[ext_resource type="AudioStream" uid="uid://n6fcsbthyj7v" path="res://audio/sfx/player/pl_jumpland2.wav" id="4_n57pj"]
+[ext_resource type="Texture2D" uid="uid://pqxgpifqoibb" path="res://textures/objects/Mario.png" id="5_hgbuo"]
+
+[sub_resource type="Animation" id="Animation_u7pqa"]
+resource_name = "SelectItem"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.6, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m3sok"]
+_data = {
+"SelectItem": SubResource("Animation_u7pqa")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2gt5c"]
+custom_solver_bias = 1.0
+height = 1.5
+radius = 0.415
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bjytw"]
+height = 0.6
+radius = 0.415
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_v2wag"]
+
+[sub_resource type="Animation" id="Animation_2nt5u"]
+resource_name = "Idle"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:Bobset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qcc2e"]
+resource_name = "Walk"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WalkSound")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}, {
+"args": [0.0],
+"method": &"play"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:Bobset")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0.05, 0), Vector2(0, 0.1), Vector2(-0.05, 0), Vector2(0, 0.1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tfpfw"]
+_data = {
+"Idle": SubResource("Animation_2nt5u"),
+"Walk": SubResource("Animation_qcc2e")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_k8oh8"]
+height = 0.5
+radius = 0.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_3rlov"]
+radius = 0.6
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+floor_snap_length = 0.5
+script = ExtResource("1_lx1yv")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.2)
+cull_mask = 1048573
+
+[node name="InteractionCast" type="RayCast3D" parent="CameraPivot/Camera3D"]
+target_position = Vector3(0, 0, -3)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="ItemAnimations" type="AnimationPlayer" parent="CameraPivot/Camera3D"]
+root_node = NodePath("../Item")
+libraries = {
+"": SubResource("AnimationLibrary_m3sok")
+}
+
+[node name="Item" type="Node3D" parent="CameraPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+
+[node name="Flashlight" type="SpotLight3D" parent="CameraPivot/Camera3D"]
+visible = false
+light_energy = 4.232
+light_specular = 0.16
+spot_range = 8.0
+spot_angle_attenuation = 1.10957
+
+[node name="StandShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("CylinderShape3D_2gt5c")
+
+[node name="CrouchShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0)
+shape = SubResource("CylinderShape3D_bjytw")
+disabled = true
+
+[node name="Foot" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.4, 0, 0)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.4, 0, 0)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.4)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot5" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.4)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot6" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.3, 0, -0.2)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot7" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.3, 0, 0.2)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot8" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.3, 0, 0.2)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="Foot9" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.3, 0, -0.2)
+shape = SubResource("SeparationRayShape3D_v2wag")
+
+[node name="WalkSound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+stream = ExtResource("2_63stx")
+max_polyphony = 2
+
+[node name="JumpSound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+stream = ExtResource("3_4urpi")
+max_polyphony = 2
+
+[node name="LandSound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+stream = ExtResource("4_n57pj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+speed_scale = 0.5
+libraries = {
+"": SubResource("AnimationLibrary_tfpfw")
+}
+
+[node name="CrouchCast" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("CylinderShape3D_k8oh8")
+target_position = Vector3(0, 1, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+layers = 2
+pixel_size = 0.0055
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("5_hgbuo")
+
+[node name="PickupBox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupBox"]
+shape = SubResource("CylinderShape3D_3rlov")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer"]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewportContainer" type="SubViewport" parent="CanvasLayer/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="ItemCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewportContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.2)
+cull_mask = 2
+current = true
+fov = 37.8493
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 181.0
+offset_top = 3.0
+offset_right = 892.0
+offset_bottom = 168.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 36
+horizontal_alignment = 1
+
+[connection signal="area_entered" from="PickupBox" to="." method="Pickup"]

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Registry" load_steps=2 format=3 uid="uid://c5772mjwrvepq"]
+
+[ext_resource type="Script" path="res://scripts/resources/registry.gd" id="1_rk6k6"]
+
+[resource]
+script = ExtResource("1_rk6k6")
+values = {
+"gun": "res://items/Gun/Gun.tres",
+"test_item": "res://items/TestItem/TestItem.tres"
+}

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bnjvjg5pjpaa3"]
+
+[ext_resource type="Texture2D" uid="uid://b35clsm2irvj7" path="res://textures/objects/button/buttonbase.png" id="1_y76io"]
+
+[resource]
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("1_y76io")
+metallic = 0.5
+roughness = 0.1
+texture_filter = 0

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://di3nfclv1du5l"]
+
+[ext_resource type="Texture2D" uid="uid://r1x5kbbt3p30" path="res://textures/objects/button/Button.png" id="1_h83oc"]
+
+[resource]
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("1_h83oc")
+metallic_specular = 1.0
+roughness = 0.1
+texture_filter = 0

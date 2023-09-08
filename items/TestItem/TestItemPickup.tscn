@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://bu41ag253hq3x"]
+
+[ext_resource type="PackedScene" uid="uid://c45cqdelyjihp" path="res://scenes/objects/items/ItemPickup.tscn" id="1_0g657"]
+[ext_resource type="Texture2D" uid="uid://dntl0g8x1331j" path="res://textures/Missing.png" id="2_1cy6s"]
+[ext_resource type="Resource" uid="uid://dciosjudmvqqs" path="res://items/TestItem/TestItem.tres" id="2_dndnh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tahn0"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="TestItemPickup" instance=ExtResource("1_0g657")]
+item = ExtResource("2_dndnh")
+
+[node name="Sprite3D" type="Sprite3D" parent="Model" index="0"]
+pixel_size = 0.0177
+billboard = 1
+double_sided = false
+texture_filter = 0
+texture = ExtResource("2_1cy6s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_tahn0")

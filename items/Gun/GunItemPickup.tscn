@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4vdfrao81sth"]
+
+[ext_resource type="PackedScene" uid="uid://c45cqdelyjihp" path="res://scenes/objects/items/ItemPickup.tscn" id="1_ts8f4"]
+[ext_resource type="PackedScene" uid="uid://cr3us5a8qhqdo" path="res://models/objects/Gun.gltf" id="2_30k4x"]
+[ext_resource type="Resource" uid="uid://deqsn8p5kxvuc" path="res://items/Gun/Gun.tres" id="2_cfp02"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c7fom"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="GunItemPickup" instance=ExtResource("1_ts8f4")]
+item = ExtResource("2_cfp02")
+
+[node name="Gun" parent="Model" index="0" instance=ExtResource("2_30k4x")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_c7fom")

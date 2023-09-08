@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://l1ebynflg4ml"]
+
+[ext_resource type="Texture2D" uid="uid://dntl0g8x1331j" path="res://textures/Missing.png" id="1_c4fgn"]
+
+[resource]
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("1_c4fgn")
+texture_filter = 0

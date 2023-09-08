@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu25ggyasgnkq"]
+
+[ext_resource type="PackedScene" uid="uid://cfl6ac0qt8jp5" path="res://scenes/objects/items/HeldItem.tscn" id="1_ryo63"]
+[ext_resource type="Texture2D" uid="uid://dntl0g8x1331j" path="res://textures/Missing.png" id="2_t7ju5"]
+
+[node name="TestHeldItem" instance=ExtResource("1_ryo63")]
+
+[node name="Sprite3D" type="Sprite3D" parent="Model" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.815, -0.245, -0.955)
+layers = 2
+pixel_size = 0.0209
+texture_filter = 0
+texture = ExtResource("2_t7ju5")

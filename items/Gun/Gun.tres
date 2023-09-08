@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Gun" load_steps=6 format=3 uid="uid://deqsn8p5kxvuc"]
+
+[ext_resource type="PackedScene" uid="uid://cbiuyubyfbdmo" path="res://items/Gun/GunHeldItem.tscn" id="1_3luog"]
+[ext_resource type="Script" path="res://scripts/resources/Gun.gd" id="1_gnc83"]
+[ext_resource type="Texture2D" uid="uid://7dcyht4ha8u8" path="res://textures/objects/pistol/Pistol.png" id="2_pj7h1"]
+[ext_resource type="AudioStream" uid="uid://nsy4jumt6gan" path="res://audio/sfx/items/guns/NoBullt.wav" id="3_0ttvt"]
+[ext_resource type="AudioStream" uid="uid://c8i7j3xmhfdr3" path="res://audio/sfx/items/guns/Shoot.ogg" id="5_gvb63"]
+
+[resource]
+script = ExtResource("1_gnc83")
+max_ammo = 1000
+ammo = 1000
+accuracy = 1.0
+shoot_cooldown = 0.1
+recoil = 10.0
+bullet_ammount = 1
+shoot_sound = ExtResource("5_gvb63")
+no_bullet_sound = ExtResource("3_0ttvt")
+aim_position = Vector3(0, 0, 0)
+registry_name = "gun"
+name = "Gun"
+description = "A Gun"
+icon = ExtResource("2_pj7h1")
+icon_offset = Vector2(0, 0)
+held_scene = ExtResource("1_3luog")
