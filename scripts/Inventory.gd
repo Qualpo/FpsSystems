@@ -26,3 +26,14 @@ func RemoveItemAtIndex(index:int):
 			if CurItem == index:
 				CurItem -= 1
 		Items.remove_at(index)
+func _input(event):
+	if event.is_action_pressed("ScrollUp"):
+		var nitem = CurItem + 1
+		if nitem >= Items.size():
+			nitem = 0
+		SelectItem(nitem)
+	elif event.is_action_pressed("ScrollDown"):
+		var nitem = CurItem - 1
+		if nitem < 0:
+			nitem = Items.size()-1
+		SelectItem(nitem)
