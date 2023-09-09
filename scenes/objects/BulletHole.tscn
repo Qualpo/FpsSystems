@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5qlenn1p0r2r"]
+
+[ext_resource type="Texture2D" uid="uid://bda1wkh88x3lr" path="res://textures/objects/BulletHole.png" id="1_kyqb7"]
+[ext_resource type="Script" path="res://scripts/objects/BulletHole.gd" id="2_bmp44"]
+
+[node name="BulletHole" type="Sprite3D"]
+shaded = true
+texture_filter = 0
+texture = ExtResource("1_kyqb7")
+script = ExtResource("2_bmp44")

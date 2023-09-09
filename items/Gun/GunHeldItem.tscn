@@ -138,6 +138,9 @@ height = 0.2
 radius = 0.06
 height = 0.51
 
+[sub_resource type="Animation" id="Animation_tkboo"]
+length = 0.001
+
 [sub_resource type="Animation" id="Animation_afwh7"]
 resource_name = "Shoot"
 length = 0.2
@@ -177,9 +180,6 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector3(-0.0999992, -0.1, 0), Vector3(-0.0299992, -0.1, 0), Vector3(-0.0999992, -0.1, 0)]
 }
-
-[sub_resource type="Animation" id="Animation_tkboo"]
-length = 0.001
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7ewsm"]
 _data = {

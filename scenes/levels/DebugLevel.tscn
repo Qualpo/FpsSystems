@@ -22,20 +22,6 @@ heightmap_flip_texture = true
 uv1_triplanar = true
 texture_filter = 0
 
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_834u5"]
-
-[sub_resource type="Sky" id="Sky_unnii"]
-sky_material = SubResource("PhysicalSkyMaterial_834u5")
-
-[sub_resource type="Environment" id="Environment_fdttu"]
-background_mode = 2
-sky = SubResource("Sky_unnii")
-ambient_light_source = 3
-reflected_light_source = 2
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_enabled = true
-
 [sub_resource type="Animation" id="Animation_egisw"]
 resource_name = "Go Up"
 length = 5.0
@@ -56,110 +42,162 @@ _data = {
 "Go Up": SubResource("Animation_egisw")
 }
 
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_834u5"]
+
+[sub_resource type="Sky" id="Sky_unnii"]
+sky_material = SubResource("PhysicalSkyMaterial_834u5")
+
+[sub_resource type="Environment" id="Environment_fdttu"]
+background_mode = 2
+sky = SubResource("Sky_unnii")
+ambient_light_source = 3
+reflected_light_source = 2
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+
 [node name="TestLevel" type="Node3D"]
 script = ExtResource("1_1dn7h")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="Level" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 0, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(165, 1, 14)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 1.4, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(1.4, 2.2, 11.6)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 1.9, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.4, 0.4, 11.6)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.4, 0.4, 11.6)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.4, 0.4, 11.6)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="."]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0.7, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.4, 0.4, 11.6)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="."]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.8, 0)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(3.8, 0.6, 11.6)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 3.6, 0.4)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 2.8)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="."]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8, 5, 4.8)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 2.8)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="."]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.9, 5, 4.8)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(4.6, 0.6, 2.8)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="."]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -24.7, 5, 4.75)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 0.6)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="."]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -12.1, 5, 4.8)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 0.6)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="."]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -16.3, 5, 4.75)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 0.6)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="."]
+[node name="CSGBox3D14" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -20.5, 5, 4.75)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(2.8, 0.6, 0.6)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="."]
+[node name="CSGBox3D17" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -20, 0.8, 4.75)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.6, 0.6, 0.2)
 
-[node name="CSGBox3D18" type="CSGBox3D" parent="."]
+[node name="CSGBox3D18" type="CSGBox3D" parent="Level"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -19, 0.8, 4.75)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(0.6, 0.6, 0.2)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="."]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.2, -6.1)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
 size = Vector3(1.8, 1.4, 1.6)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9.1)
+material_override = ExtResource("6_8cgti")
+use_collision = true
+size = Vector3(3.8, 1, 4)
+
+[node name="Button" parent="Level/CSGBox3D16" instance=ExtResource("6_sb2xa")]
+transform = Transform3D(-1, 0, -8.74228e-08, 7.57104e-08, 0.5, -0.866025, 4.37114e-08, -0.866025, -0.5, 0, 1.4, -1.8)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Level/CSGBox3D16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.8)
+size = Vector3(1, 1, 0.4)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Level/CSGBox3D16"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 1.5, -1.8)
+operation = 2
+size = Vector3(1.2, 0.2, 0.6)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Level/CSGBox3D16"]
+libraries = {
+"": SubResource("AnimationLibrary_ma7k4")
+}
+
+[node name="Entities" type="Node3D" parent="."]
+
+[node name="TestItemPickup" parent="Entities" instance=ExtResource("8_7nrl2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.1, -3.5)
+collision_mask = 0
+monitoring = true
+
+[node name="GunItemPickup" parent="Entities" instance=ExtResource("9_orjuw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.4, -4.4)
+
+[node name="Player" parent="Entities" instance=ExtResource("5_dif6b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fdttu")
@@ -169,38 +207,4 @@ transform = Transform3D(-1.95435e-08, -0.965926, 0.258819, -0.258819, 0.25, 0.93
 layers = 3
 shadow_enabled = true
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9.1)
-material_override = ExtResource("6_8cgti")
-use_collision = true
-size = Vector3(3.8, 1, 4)
-
-[node name="Button" parent="CSGBox3D16" instance=ExtResource("6_sb2xa")]
-transform = Transform3D(-1, 0, -8.74228e-08, 7.57104e-08, 0.5, -0.866025, 4.37114e-08, -0.866025, -0.5, 0, 1.4, -1.8)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D16"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.8)
-size = Vector3(1, 1, 0.4)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D16"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 1.5, -1.8)
-operation = 2
-size = Vector3(1.2, 0.2, 0.6)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CSGBox3D16"]
-libraries = {
-"": SubResource("AnimationLibrary_ma7k4")
-}
-
-[node name="TestItemPickup" parent="." instance=ExtResource("8_7nrl2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.1, -3.5)
-collision_mask = 0
-monitoring = true
-
-[node name="GunItemPickup" parent="." instance=ExtResource("9_orjuw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.4, -4.4)
-
-[node name="Player" parent="." instance=ExtResource("5_dif6b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
-
-[connection signal="Interacted" from="CSGBox3D16/Button" to="." method="_on_button_interacted"]
+[connection signal="Interacted" from="Level/CSGBox3D16/Button" to="." method="_on_button_interacted"]

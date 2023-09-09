@@ -10,10 +10,10 @@
 script = ExtResource("1_gnc83")
 max_ammo = 1000
 ammo = 1000
-accuracy = 1.0
+accuracy = 0.75
 shoot_cooldown = 0.1
-recoil = 10.0
-bullet_ammount = 1
+recoil = 3.0
+bullet_ammount = 5
 shoot_sound = ExtResource("5_gvb63")
 no_bullet_sound = ExtResource("3_0ttvt")
 aim_position = Vector3(0, 0, 0)

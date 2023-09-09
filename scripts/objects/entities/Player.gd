@@ -20,6 +20,8 @@ extends CharacterBody3D
 @onready var MoveSpeed = WalkSpeed
 @onready var Camera : Camera3D = $CameraPivot/Camera3D
 
+var NoClip = false
+
 var SensitivityScale = 1.0
 var Fov = 75.0
 var CameraDirection = Vector2()
@@ -90,49 +92,55 @@ func _physics_process(delta):
 		use.emit()
 	if Input.is_action_just_released("Use"):
 		unuse.emit()
-	if is_on_floor():
-		if AirTime >0:
-			Land(AirTime)
-		AirTime = 0.0
-		if not Sliding:
-			velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),GroundFriction)
-			velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed
-		else:
-			velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),SlideFriction)
-			velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * SlideMultiplier
-			Fov = 75.0 + velocity.length() *2
-			if velocity.length() < 5:
-				UnSlide()
-		if inputDir.length() > 0:
+	if not NoClip:
+		if is_on_floor():
+			if AirTime >0:
+				Land(AirTime)
+			AirTime = 0.0
 			if not Sliding:
-				$AnimationPlayer.speed_scale = (inputDir.length() * 0.5) - (int(Crouching) * 0.2) + (int(Sprinting) * 0.25)
-				$AnimationPlayer.play("Walk")
-				if Sprinting:
-					Fov = 75.0 + inputDir.length() *15
+				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),GroundFriction)
+				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed
 			else:
-				$AnimationPlayer.stop()
+				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),SlideFriction)
+				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * SlideMultiplier
+				Fov = 75.0 + velocity.length() *2
+				if velocity.length() < 5:
+					UnSlide()
+			if inputDir.length() > 0:
+				if not Sliding:
+					$AnimationPlayer.speed_scale = (inputDir.length() * 0.5) - (int(Crouching) * 0.2) + (int(Sprinting) * 0.25)
+					$AnimationPlayer.play("Walk")
+					if Sprinting:
+						Fov = 75.0 + inputDir.length() *15
+				else:
+					$AnimationPlayer.stop()
+					Bobset = Vector2()
+			else:
+				$AnimationPlayer.stop(true)
+				$AnimationPlayer.speed_scale = 0.1
 				Bobset = Vector2()
+				if Sprinting:
+					Fov = 75.0
+			if Input.is_action_pressed("Jump"):
+				if JumpBuffer <= 0.0:
+					Jump()
 		else:
+			JumpBuffer -= delta
+			if Sliding:
+				UnSlide()
+			AirTime += delta
 			$AnimationPlayer.stop(true)
 			$AnimationPlayer.speed_scale = 0.1
-			Bobset = Vector2()
-			if Sprinting:
-				Fov = 75.0
-		if Input.is_action_pressed("Jump"):
-			if JumpBuffer <= 0.0:
-				Jump()
+			Bobset.x = 0.0
+			Bobset.y = velocity.y/16
+			velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),AirFriction)
+			velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * AirMultiplier
+		velocity.y -= Gravity
+
 	else:
-		JumpBuffer -= delta
-		if Sliding:
-			UnSlide()
-		AirTime += delta
-		$AnimationPlayer.stop(true)
-		$AnimationPlayer.speed_scale = 0.1
-		Bobset.x = 0.0
-		Bobset.y = velocity.y/16
-		velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),AirFriction)
-		velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * AirMultiplier
-	velocity.y -= Gravity
+		velocity = lerp(velocity,Vector3(0.0,0.0,0.0),GroundFriction)
+		var evenmorerotdir = inputDir
+		velocity += evenmorerotdir
 	LastPos = position
 	move_and_slide()
 	if is_on_floor():
@@ -146,6 +154,9 @@ func _input(event):
 		MoveCamera(Vector2(-event.relative.x,-event.relative.y))
 	elif event.is_action_pressed("Flashlight"):
 		$CameraPivot/Camera3D/Flashlight.visible = !$CameraPivot/Camera3D/Flashlight.visible
+func EnableNoClip():
+	collision_mask = 0
+	NoClip = true
 func Sprint():
 	if not Crouching and not Sliding:
 		

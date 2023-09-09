@@ -2,7 +2,9 @@ extends HeldItem
 class_name HeldGun
 
 var Shooting = false
-var RNG = RandomNumberGenerator.new()
+
+@onready var RNG = RandomNumberGenerator.new()
+@onready var BulletHole = preload("res://scenes/objects/BulletHole.tscn")
 
 func _ready():
 	if item is Gun:
@@ -39,19 +41,16 @@ func Shoot():
 				if Cast.get_collider().is_in_group("Enemy"):
 					Cast.get_collider().Hit(false,self,Global.GunDamage)
 				
-			#	var hole = BulletHole.instantiate()
+				var hole = BulletHole.instantiate()
 					
-			#	Cast.get_collider().add_child(hole)
-		#		hole.global_position = Cast.get_collision_point() + (Cast.get_collision_normal()/80)
-		#		if abs(Cast.get_collision_normal().y) == 1:
-			#		hole.rotation_degrees.x = 90
-			#	else:
-			#		hole.look_at(Cast.get_collision_point()-Cast.get_collision_normal(),Vector3.UP)
+				Cast.get_collider().add_child(hole)
+				hole.global_position = Cast.get_collision_point() + (Cast.get_collision_normal()/80)
+				if abs(Cast.get_collision_normal().y) == 1:
+					hole.rotation_degrees.x = 90
+				else:
+					hole.look_at(Cast.get_collision_point()-Cast.get_collision_normal(),Vector3.UP)
 			Cast.queue_free()
 		Recoil(item.recoil)
-#		user.CameraOffset.x += recoil * 3
-#		user.CameraDirection.x += recoil
-#		user.CameraDirection.x = clamp(user.CameraDirection.x,-90,90)
 
 		await get_tree().create_timer(item.shoot_cooldown).timeout
 		Shooting = false
