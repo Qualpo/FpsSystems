@@ -41,6 +41,10 @@ signal use
 signal unuse
 signal secondaryuse
 signal secondaryunuse
+signal sprint
+signal unsprint
+signal crouch
+signal uncrouch
 
 func _ready():
 	Inventory.ItemChanged.connect(ChangeHeldItem)
@@ -92,6 +96,10 @@ func _physics_process(delta):
 		use.emit()
 	if Input.is_action_just_released("Use"):
 		unuse.emit()
+	if Input.is_action_just_pressed("SecondaryUse"):
+		secondaryuse.emit()
+	if Input.is_action_just_released("SecondaryUse"):
+		secondaryunuse.emit()
 	if not NoClip:
 		if is_on_floor():
 			if AirTime >0:
@@ -103,7 +111,7 @@ func _physics_process(delta):
 			else:
 				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),SlideFriction)
 				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * SlideMultiplier
-				Fov = 75.0 + velocity.length() *2
+				SetFov(velocity.length() *2)
 				if velocity.length() < 5:
 					UnSlide()
 			if inputDir.length() > 0:
@@ -111,7 +119,7 @@ func _physics_process(delta):
 					$AnimationPlayer.speed_scale = (inputDir.length() * 0.5) - (int(Crouching) * 0.2) + (int(Sprinting) * 0.25)
 					$AnimationPlayer.play("Walk")
 					if Sprinting:
-						Fov = 75.0 + inputDir.length() *15
+						SetFov(inputDir.length() *15)
 				else:
 					$AnimationPlayer.stop()
 					Bobset = Vector2()
@@ -120,7 +128,7 @@ func _physics_process(delta):
 				$AnimationPlayer.speed_scale = 0.1
 				Bobset = Vector2()
 				if Sprinting:
-					Fov = 75.0
+					SetFov(0)
 			if Input.is_action_pressed("Jump"):
 				if JumpBuffer <= 0.0:
 					Jump()
@@ -159,15 +167,17 @@ func EnableNoClip():
 	NoClip = true
 func Sprint():
 	if not Crouching and not Sliding:
-		
+		sprint.emit()
 		MoveSpeed = WalkSpeed * SprintMultiplier
 		Sprinting = true
 func UnSprint():
 	if not Crouching:
+		unsprint.emit()
 		MoveSpeed = WalkSpeed
 		Sprinting = false
-		Fov = 75.0
+		SetFov(0)
 func Crouch():
+	crouch.emit()
 	print("crouch")
 	if not is_on_floor():
 		position.y += 0.5
@@ -187,7 +197,8 @@ func UnCrouch():
 
 	if $CrouchCast.is_colliding():
 		await CanUnCrouch
-	Fov = 75.0
+	uncrouch.emit()
+	SetFov(0)
 	MoveSpeed = WalkSpeed
 	CameraPosition.y = StandHeight
 	if Sliding:
@@ -233,9 +244,14 @@ func Slide():
 	$LandSound.play()
 func UnSlide():
 	Crouch()
-	Fov = 75.0
+	SetFov(0)
 	Sliding = false
 
 
 func Pickup(area):
 	area.Interact(self)
+	
+func SetFov(fov):
+	Fov = fov + 75.0
+func SetMovementSpeed(speed):
+	MoveSpeed = WalkSpeed * speed

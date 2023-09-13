@@ -10,13 +10,13 @@
 script = ExtResource("1_gnc83")
 max_ammo = 1000
 ammo = 1000
-accuracy = 0.75
+accuracy = 0.89
 shoot_cooldown = 0.1
 recoil = 3.0
-bullet_ammount = 5
+bullet_ammount = 1
 shoot_sound = ExtResource("5_gvb63")
 no_bullet_sound = ExtResource("3_0ttvt")
-aim_position = Vector3(0, 0, 0)
+aim_zoom = 20.0
 registry_name = "gun"
 name = "Gun"
 description = "A Gun"

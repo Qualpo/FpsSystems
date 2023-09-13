@@ -1,8 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://bvrirjbowjnt2"]
+[gd_scene load_steps=15 format=3 uid="uid://bvrirjbowjnt2"]
 
 [ext_resource type="Script" path="res://scripts/levels/DebugLevel.gd" id="1_1dn7h"]
-[ext_resource type="Texture2D" uid="uid://day5tbnhmhkux" path="res://textures/environment/-0FIFTIES_F01.bmp" id="2_imxmx"]
-[ext_resource type="Texture2D" uid="uid://df41p5yq60ei4" path="res://textures/environment/-0FIFTIES_F01HEIGHT.png" id="3_63s8b"]
+[ext_resource type="Texture2D" uid="uid://day5tbnhmhkux" path="res://textures/environment/-0FIFTIES_F01.bmp" id="3_63s8b"]
 [ext_resource type="Texture2D" uid="uid://bp6gvpacigbvg" path="res://textures/environment/NormalMap.png" id="4_y4i2l"]
 [ext_resource type="PackedScene" uid="uid://dhlm0x0n72a44" path="res://scenes/objects/entities/Player.tscn" id="5_dif6b"]
 [ext_resource type="Material" uid="uid://l1ebynflg4ml" path="res://resource/materials/Missing.tres" id="6_8cgti"]
@@ -12,7 +11,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w6xil"]
 diffuse_mode = 3
-albedo_texture = ExtResource("2_imxmx")
+albedo_texture = ExtResource("3_63s8b")
 roughness = 0.2
 normal_enabled = true
 normal_scale = 0.4
