@@ -3,7 +3,7 @@ extends Node
 var Items : Array[Item]
 var CurItem = -1
 
-#Registry Name
+#Registry Name ie "test_item"/"gun"
 var StartingItems : Array[String] = [
 	
 ]
