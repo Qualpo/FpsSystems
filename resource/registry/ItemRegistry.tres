@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_rk6k6")
-values = {
+entries = {
 "gun": "res://items/Gun/Gun.tres",
 "test_item": "res://items/TestItem/TestItem.tres"
 }

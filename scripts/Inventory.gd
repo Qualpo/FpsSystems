@@ -3,13 +3,25 @@ extends Node
 var Items : Array[Item]
 var CurItem = -1
 
+#Registry Name
+var StartingItems : Array[String] = [
+	
+]
+
 signal ItemChanged(item:Item)
+
+
+func _ready():
+	for i in StartingItems:
+		var item = Global.ItemRegistry.GetValue(i)
+		if item != null:
+			Items.append(load(item))
 
 func Unequip():
 	CurItem = -1
 	ItemChanged.emit(null)
 func SelectItem(index:int):
-	if index < Items.size() and index >= 0:
+	if index < Items.size() and index >= -1:
 		CurItem = index
 		ItemChanged.emit(Items[index])
 func AddItem(item:Item):

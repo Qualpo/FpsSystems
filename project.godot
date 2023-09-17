@@ -16,8 +16,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Inventory="*res://scripts/Inventory.gd"
 Global="*res://scripts/Global.gd"
+Inventory="*res://scripts/Inventory.gd"
 
 [display]
 
@@ -97,6 +97,7 @@ ScrollDown={
 3d_physics/layer_2="Entities"
 3d_physics/layer_3="Interactables"
 3d_physics/layer_4="Pickups"
+3d_physics/layer_5="Water"
 
 [rendering]
 

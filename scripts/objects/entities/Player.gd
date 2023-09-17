@@ -1,14 +1,20 @@
 extends CharacterBody3D
 
+@export var SprintEnabled = true
+@export var SlideEnabled = true
+@export var JumpEnabled = true
+
 
 @export var GroundFriction = 0.08
 @export var AirFriction = 0.01
 @export var SlideFriction = 0.01
+@export var SwimFriction = 0.04
 @export var CrouchSpeed = 0.3
 @export var WalkSpeed = 0.8
 @export var SprintMultiplier = 2.0
 @export var AirMultiplier = 0.15
 @export var SlideMultiplier = 0.1
+@export var SwimMultiplier = 0.4
 @export var JumpForce = 4.0
 @export var Gravity = 0.163
 @export var StepSmooth = 0.2
@@ -22,6 +28,7 @@ extends CharacterBody3D
 
 var NoClip = false
 
+
 var SensitivityScale = 1.0
 var Fov = 75.0
 var CameraDirection = Vector2()
@@ -34,6 +41,11 @@ var CameraPosition = Vector3(0.0,0.5,-0.2)
 var LastCanUnCrouch = true
 var JumpBuffer = 0.0
 var CameraOffset = Vector2()
+var Swimming = false
+
+var WaterObject = null
+
+var CurHeldItem : HeldItem = null
 
 signal CanUnCrouch
 
@@ -45,14 +57,15 @@ signal sprint
 signal unsprint
 signal crouch
 signal uncrouch
+signal jump
 
 func _ready():
 	Inventory.ItemChanged.connect(ChangeHeldItem)
-	#var item = load(Global.ItemRegistry.GetValue("test_item")).duplicate()
-	#Inventory.AddItem(item)
+	Inventory.SelectItem(0)
 	CameraDirection = Vector2(rotation_degrees.y,Camera.rotation_degrees.x)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$Sprite3D.hide()
+	#EnableNoClip()
 
 func _physics_process(delta):
 
@@ -100,7 +113,7 @@ func _physics_process(delta):
 		secondaryuse.emit()
 	if Input.is_action_just_released("SecondaryUse"):
 		secondaryunuse.emit()
-	if not NoClip:
+	if not (NoClip||Swimming):
 		if is_on_floor():
 			if AirTime >0:
 				Land(AirTime)
@@ -146,16 +159,31 @@ func _physics_process(delta):
 		velocity.y -= Gravity
 
 	else:
-		velocity = lerp(velocity,Vector3(0.0,0.0,0.0),GroundFriction)
-		var evenmorerotdir = inputDir
-		velocity += evenmorerotdir
+		$AnimationPlayer.stop(true)
+		$AnimationPlayer.speed_scale = 0.08
+		Bobset.x = 0.0
+		Bobset.y = velocity.y/32
+		var vertinput = Vector3(inputDir.x,0.0,inputDir.y).rotated(Vector3(1,0,0),deg_to_rad(CameraDirection.y))
+		rotInputDir = vertinput.rotated(Vector3(0,1,0),deg_to_rad(CameraDirection.x))
+		if Input.is_action_pressed("Jump"):
+			rotInputDir.y = 1.0
+		if Crouching:
+			rotInputDir.y = -1.0
+		if NoClip:
+			velocity = lerp(velocity,Vector3(0.0,0.0,0.0),SwimFriction)
+			velocity += rotInputDir * MoveSpeed
+		elif  Swimming:
+			velocity = lerp(velocity,Vector3(0.0,0.0,0.0),SwimFriction)
+			velocity += rotInputDir * WalkSpeed * SwimMultiplier
+			velocity.y -= Gravity * 0.5
+
 	LastPos = position
 	move_and_slide()
 	if is_on_floor():
 		if abs(position.y - LastPos.y)>0.01:
 			var dist = position.y - LastPos.y
 			
-			Camera.position.y -= dist
+			Camera.position.y -= dist 
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.global_transform= Camera.global_transform
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -166,18 +194,18 @@ func EnableNoClip():
 	collision_mask = 0
 	NoClip = true
 func Sprint():
-	if not Crouching and not Sliding:
-		sprint.emit()
+	if not Crouching and not Sliding and not Swimming:
 		MoveSpeed = WalkSpeed * SprintMultiplier
 		Sprinting = true
+		sprint.emit()
 func UnSprint():
-	if not Crouching:
-		unsprint.emit()
+	if not Crouching and not Swimming:
 		MoveSpeed = WalkSpeed
 		Sprinting = false
 		SetFov(0)
+		unsprint.emit()
 func Crouch():
-	crouch.emit()
+	
 	print("crouch")
 	if not is_on_floor():
 		position.y += 0.5
@@ -188,6 +216,7 @@ func Crouch():
 	Crouching = true
 	$StandShape.disabled = true
 	$CrouchShape.disabled = false
+	crouch.emit()
 	
 func UnCrouch():
 	
@@ -197,7 +226,7 @@ func UnCrouch():
 
 	if $CrouchCast.is_colliding():
 		await CanUnCrouch
-	uncrouch.emit()
+	
 	SetFov(0)
 	MoveSpeed = WalkSpeed
 	CameraPosition.y = StandHeight
@@ -211,6 +240,7 @@ func UnCrouch():
 	Sliding = false
 	$StandShape.disabled = false
 	$CrouchShape.disabled = true
+	uncrouch.emit()
 func MoveCamera(vec : Vector2):
 	CameraDirection.x += vec.x * Sensitivity * SensitivityScale
 	CameraDirection.y += vec.y * Sensitivity * SensitivityScale
@@ -218,6 +248,7 @@ func MoveCamera(vec : Vector2):
 	$CameraPivot/Camera3D/Item.rotation.y -= deg_to_rad(vec.x* Sensitivity * SensitivityScale * 0.5)
 	$CameraPivot/Camera3D/Item.rotation.x -= deg_to_rad(vec.y* Sensitivity * SensitivityScale* 0.5)
 func ChangeHeldItem(item:Item):
+	
 	$CameraPivot/Camera3D/ItemAnimations.play("SelectItem")
 	if $CameraPivot/Camera3D/Item.get_child_count() > 0:
 		for c in $CameraPivot/Camera3D/Item.get_children():
@@ -225,12 +256,17 @@ func ChangeHeldItem(item:Item):
 	if item != null:
 		var helditem = item.held_scene.instantiate()
 		helditem.Hold(self,item)
+		if CurHeldItem != null:
+			CurHeldItem.UnHold()
+		CurHeldItem = helditem
 		$CameraPivot/Camera3D/Item.add_child(helditem)
 		
 func Jump():
+	
 	JumpBuffer = 0.1
 	velocity.y += JumpForce
 	$JumpSound.play()
+	jump.emit()
 func Land(force):
 	$LandSound.play()
 	if Crouching:
@@ -255,3 +291,24 @@ func SetFov(fov):
 	Fov = fov + 75.0
 func SetMovementSpeed(speed):
 	MoveSpeed = WalkSpeed * speed
+
+
+func EnableSwimming():
+	Swimming = true
+
+
+func DisableSwimming():
+	Swimming = false
+
+
+func EnterWater(area):
+	WaterObject = area
+	if not Swimming:
+		print("swim")
+		EnableSwimming()
+
+
+func ExitWater(area):
+	if area == WaterObject:
+		WaterObject = null
+		DisableSwimming()

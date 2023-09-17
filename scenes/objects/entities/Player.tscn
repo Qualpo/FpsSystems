@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dhlm0x0n72a44"]
+[gd_scene load_steps=19 format=3 uid="uid://dhlm0x0n72a44"]
 
 [ext_resource type="Script" path="res://scripts/objects/entities/Player.gd" id="1_lx1yv"]
 [ext_resource type="AudioStream" uid="uid://b8qum3210n0u3" path="res://audio/sfx/player/WalkTile.tres" id="2_63stx"]
@@ -102,6 +102,8 @@ radius = 0.4
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_3rlov"]
 radius = 0.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_76mnr"]
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -221,6 +223,13 @@ collision_mask = 8
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PickupBox"]
 shape = SubResource("CylinderShape3D_3rlov")
 
+[node name="SwimBox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SwimBox"]
+shape = SubResource("CapsuleShape3D_76mnr")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer"]
@@ -269,3 +278,5 @@ grow_vertical = 2
 texture = ExtResource("6_xtbd3")
 
 [connection signal="area_entered" from="PickupBox" to="." method="Pickup"]
+[connection signal="area_entered" from="SwimBox" to="." method="EnterWater"]
+[connection signal="area_exited" from="SwimBox" to="." method="ExitWater"]

@@ -10,12 +10,20 @@ var Aiming = false
 func _ready():
 	User.sprint.connect(UserSprint)
 	User.unsprint.connect(UserUnSprint)
+	User.crouch.connect(UserCrouch)
+	User.uncrouch.connect(UserUnCrouch)
 	if item is Gun:
 		$Shoot.stream = item.shoot_sound
 		$NoBullet.stream = item.no_bullet_sound
+	$AnimationPlayer.play("Idle")
 func Use():
 	if not Shooting:
 		Shoot()
+func UnHold():
+	User.SetFov(0.0)
+	User.SetMovementSpeed(1)
+	super.UnHold()
+	
 func  SecondaryUse():
 	Aim()
 func SecondaryUnUse():
@@ -77,14 +85,21 @@ func Recoil(force):
 	User.CameraOffset = Vector2(xf,yf)*0.5
 	User.MoveCamera(Vector2(xf,yf))
 func Aim():
-	if not Aiming and not User.Sliding:
+	if not Aiming:
 		User.UnSprint()
 		Aiming = true
 		$AnimationPlayer.play("Aim")
+		Shooting = true
 		await $AnimationPlayer.animation_finished
+		Shooting = false
 		$AnimationPlayer.play("AimIdle")
 		User.SetFov(-item.aim_zoom)
-		User.SetMovementSpeed(0.5)
+		if User.Crouching:
+			User.SetMovementSpeed(0.5* User.CrouchSpeed)
+		elif User.Sliding:
+			pass
+		else:
+			User.SetMovementSpeed(0.5)
 func UnAim():
 	if Aiming:
 		Aiming = false
@@ -92,9 +107,22 @@ func UnAim():
 		await $AnimationPlayer.animation_finished
 		$AnimationPlayer.play("Idle")
 		User.SetFov(0.0)
-		User.SetMovementSpeed(1)
+		if User.Crouching:
+			User.SetMovementSpeed(User.CrouchSpeed)
+		elif User.Sliding:
+			pass
+		else:
+			User.SetMovementSpeed(1)
 func UserSprint():
 	UnAim()
 func UserUnSprint():
 	if Aiming:
 		User.SetFov(-item.aim_zoom)
+func UserCrouch():
+	if Aiming:
+		User.SetFov(-item.aim_zoom)
+		User.SetMovementSpeed(0.5 * User.CrouchSpeed)
+func UserUnCrouch():
+	if Aiming:
+		User.SetFov(-item.aim_zoom)
+		User.SetMovementSpeed(0.5)

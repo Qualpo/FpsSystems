@@ -2,19 +2,21 @@ extends Resource
 class_name Registry
 
 
-@export var values : Dictionary
+@export var entries = {}
 
 
-func AddValue(name,path):
-	values[name] = path
-func GetValue(name):
-	if values.has(name):
-		return values[name]
+func AddEntry(key,value):
+	entries[key] = value
+	
+func GetValue(key):
+	if entries.has(key):
+		return entries[key]
 	else:
-		print("no value with key " + name)
+		print("no value with key " + key)
 		return null
-func RemoveValue(name):
-	if values.has(name):
-		values.erase(name)
+
+func RemoveEntry(key):
+	if entries.has(key):
+		entries.erase(key)
 	else:
-		print("no value with key " + name)
+		print("no value with key " + key)
