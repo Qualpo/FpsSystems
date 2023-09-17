@@ -58,7 +58,7 @@ func Shoot():
 				
 			
 				if Cast.get_collider().is_in_group("Enemy"):
-					Cast.get_collider().Hit(false,self,Global.GunDamage)
+					Cast.get_collider().Hit(Global.GunDamage)
 				
 				var hole = BulletHole.instantiate()
 					
