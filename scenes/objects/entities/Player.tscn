@@ -1,10 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://dhlm0x0n72a44"]
+[gd_scene load_steps=18 format=3 uid="uid://dhlm0x0n72a44"]
 
 [ext_resource type="Script" path="res://scripts/objects/entities/Player.gd" id="1_lx1yv"]
 [ext_resource type="AudioStream" uid="uid://b8qum3210n0u3" path="res://audio/sfx/player/WalkTile.tres" id="2_63stx"]
 [ext_resource type="AudioStream" uid="uid://bio8xpu26qojx" path="res://audio/sfx/player/Jump.tres" id="3_4urpi"]
 [ext_resource type="AudioStream" uid="uid://n6fcsbthyj7v" path="res://audio/sfx/player/pl_jumpland2.wav" id="4_n57pj"]
-[ext_resource type="Texture2D" uid="uid://pqxgpifqoibb" path="res://textures/objects/Mario.png" id="5_hgbuo"]
 [ext_resource type="Material" uid="uid://d1hxwlw7grj1q" path="res://resource/materials/Invert.tres" id="6_22ngk"]
 [ext_resource type="Texture2D" uid="uid://x1sov6bjk51s" path="res://textures/ui/crosshair.png" id="6_xtbd3"]
 
@@ -207,14 +206,6 @@ libraries = {
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("CylinderShape3D_k8oh8")
 target_position = Vector3(0, 1, 0)
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-layers = 2
-pixel_size = 0.0055
-billboard = 2
-shaded = true
-texture_filter = 0
-texture = ExtResource("5_hgbuo")
 
 [node name="PickupBox" type="Area3D" parent="."]
 collision_layer = 0

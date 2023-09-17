@@ -64,7 +64,6 @@ func _ready():
 	Inventory.SelectItem(0)
 	CameraDirection = Vector2(rotation_degrees.y,Camera.rotation_degrees.x)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	$Sprite3D.hide()
 	#EnableNoClip()
 
 func _physics_process(delta):
