@@ -93,7 +93,7 @@ func Aim():
 		await $AnimationPlayer.animation_finished
 		Shooting = false
 		$AnimationPlayer.play("AimIdle")
-		User.SetFov(-item.aim_zoom)
+		User.SetFov(-item.aim_zoom * 74)
 		if User.Crouching:
 			User.SetMovementSpeed(0.5* User.CrouchSpeed)
 		elif User.Sliding:

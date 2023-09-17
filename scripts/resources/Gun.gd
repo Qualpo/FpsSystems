@@ -9,7 +9,7 @@ class_name Gun
 @export var bullet_ammount = 1
 @export var shoot_sound : AudioStream
 @export var no_bullet_sound : AudioStream
-@export var aim_zoom = 0.0
+@export_range(0,1) var aim_zoom = 0.0
 
 func SaveItem():
 	var dict = {}
