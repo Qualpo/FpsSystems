@@ -42,6 +42,7 @@ var LastCanUnCrouch = true
 var JumpBuffer = 0.0
 var CameraOffset = Vector2()
 var Swimming = false
+var CanLand = false
 
 var WaterObject = null
 
@@ -64,6 +65,10 @@ func _ready():
 	Inventory.SelectItem(0)
 	CameraDirection = Vector2(rotation_degrees.y,Camera.rotation_degrees.x)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	await get_tree().create_timer(0.1).timeout
+	AirTime = 0.0
+	CanLand = true
 	#EnableNoClip()
 
 func _physics_process(delta):
@@ -117,7 +122,8 @@ func _physics_process(delta):
 	if not (NoClip||Swimming):
 		if is_on_floor():
 			if AirTime >0:
-				Land(AirTime)
+				if CanLand:
+					Land(AirTime)
 			AirTime = 0.0
 			if not Sliding:
 				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),GroundFriction)
@@ -269,6 +275,7 @@ func Jump():
 	$JumpSound.play()
 	jump.emit()
 func Land(force):
+	print(AirTime)
 	$LandSound.play()
 	if Crouching:
 		if velocity.length() > 10 and is_on_floor():
