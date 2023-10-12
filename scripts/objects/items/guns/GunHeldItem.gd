@@ -81,7 +81,6 @@ func Shoot():
 				bulrot.y += Vector2(normal.x,-normal.z).angle() + deg_to_rad(90)
 				bulrot.z += deg_to_rad(RNG.randf_range(0.0,360.0))
 				hole.global_rotation = bulrot
-				#hole.look_at(Cast.get_collision_point()-Cast.get_collision_normal(),Vector3.UP)
 			Cast.queue_free()
 			
 		if Aiming:

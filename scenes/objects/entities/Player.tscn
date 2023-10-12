@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dhlm0x0n72a44"]
+[gd_scene load_steps=19 format=3 uid="uid://dhlm0x0n72a44"]
 
 [ext_resource type="Script" path="res://scripts/objects/entities/Player.gd" id="1_lx1yv"]
 [ext_resource type="AudioStream" uid="uid://b8qum3210n0u3" path="res://audio/sfx/player/WalkTile.tres" id="2_63stx"]
@@ -7,34 +7,6 @@
 [ext_resource type="Material" uid="uid://d1hxwlw7grj1q" path="res://resource/materials/Invert.tres" id="6_22ngk"]
 [ext_resource type="Texture2D" uid="uid://x1sov6bjk51s" path="res://textures/ui/crosshair.png" id="6_xtbd3"]
 [ext_resource type="FontFile" uid="uid://c4t7yxpbhdhwd" path="res://resource/fonts/shit.ttf" id="8_xs4js"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_bp86i"]
-radius = 0.115
-height = 0.83
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_0eeiu"]
-radius = 0.12
-height = 0.61
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_0751g"]
-radius = 0.085
-height = 0.72
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_d1ca3"]
-radius = 0.09
-height = 0.47
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_iq1w4"]
-radius = 0.055
-height = 0.5
-
-[sub_resource type="SphereMesh" id="SphereMesh_i0v23"]
-radius = 0.05
-height = 0.1
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_le631"]
-radius = 0.09
-height = 0.9
 
 [sub_resource type="Animation" id="Animation_u7pqa"]
 resource_name = "SelectItem"
@@ -56,10 +28,6 @@ tracks/0/keys = {
 _data = {
 "SelectItem": SubResource("Animation_u7pqa")
 }
-
-[sub_resource type="SphereMesh" id="SphereMesh_w0shn"]
-radius = 0.2
-height = 0.4
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_2gt5c"]
 custom_solver_bias = 1.0
@@ -149,61 +117,6 @@ CameraSmooth = 0.4
 
 [node name="ShadowModel" type="Node3D" parent="."]
 
-[node name="ShadowMesh" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_bp86i")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh5" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.4, 0)
-visible = false
-mesh = SubResource("CapsuleMesh_0eeiu")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh6" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -0.3, 0.1, 0)
-visible = false
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_0751g")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh2" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.234632, 0)
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_d1ca3")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh7" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, -0.234632, -0.3)
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_iq1w4")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh8" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, -0.05, -0.304632, -0.1)
-cast_shadow = 3
-mesh = SubResource("SphereMesh_i0v23")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh9" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0.07, -0.294632, -0.1)
-cast_shadow = 3
-mesh = SubResource("SphereMesh_i0v23")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh3" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.2, -0.634632, 0)
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_le631")
-skeleton = NodePath("../..")
-
-[node name="ShadowMesh4" type="MeshInstance3D" parent="ShadowModel"]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -0.2, -0.634632, 0)
-cast_shadow = 3
-mesh = SubResource("CapsuleMesh_le631")
-skeleton = NodePath("../..")
-
 [node name="CameraPivot" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
@@ -234,11 +147,6 @@ light_specular = 0.16
 shadow_enabled = true
 spot_range = 812.75
 spot_angle_attenuation = 1.10957
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraPivot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
-cast_shadow = 3
-mesh = SubResource("SphereMesh_w0shn")
 
 [node name="StandShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
@@ -372,7 +280,7 @@ stretch = true
 [node name="SubViewportContainer" type="SubViewport" parent="CanvasLayer/SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1152, 648)
+size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="ItemCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewportContainer"]

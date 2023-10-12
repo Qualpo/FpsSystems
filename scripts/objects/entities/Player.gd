@@ -104,7 +104,7 @@ func _physics_process(delta):
 		if SprintEnabled:
 			UnSprint()
 	if Input.is_action_just_pressed("Crouch"):
-		if (inputDir != Vector2() and velocity.length() > SlideThreshold) and is_on_floor() and SlideEnabled:
+		if ((inputDir != Vector2() and velocity.length() > SlideThreshold) or (get_floor_angle() > 0.0)) and is_on_floor() and SlideEnabled:
 			Slide()
 		else:
 			Crouch()
@@ -135,9 +135,10 @@ func _physics_process(delta):
 				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed
 			else:
 				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),SlideFriction)
+				velocity += Vector3(get_floor_normal().x,0.0,get_floor_normal().z)*0.5
 				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * SlideMultiplier
 				SetFov(velocity.length() *2)
-				if velocity.length() < SlideThreshold/2.0:
+				if (velocity.length() < SlideThreshold/2.0) and get_floor_angle() == 0.0:
 					UnSlide()
 			if inputDir.length() > 0:
 				if not Sliding:
@@ -158,9 +159,6 @@ func _physics_process(delta):
 			if Input.is_action_pressed("Jump"):
 				if JumpBuffer <= 0.0 and JumpEnabled:
 					Jump()
-#			if PastSlideAngle:
-#				if $FloorCast.is_colliding():
-#					velocity += ($FloorCast.get_collision_normal(0)- up_direction) * Gravity
 		else:
 			JumpBuffer -= delta
 			if Sliding:

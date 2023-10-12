@@ -4,6 +4,9 @@ class_name HeldItem
 var item : Item
 var User = null
 
+func _ready():
+	$PreviewCamera.queue_free()
+
 func Hold(user,item):
 	User = user
 	self.item = item
