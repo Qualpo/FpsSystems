@@ -1,9 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5qlenn1p0r2r"]
+[gd_scene load_steps=5 format=3 uid="uid://b5qlenn1p0r2r"]
 
-[ext_resource type="Texture2D" uid="uid://bda1wkh88x3lr" path="res://textures/objects/BulletHole.png" id="1_kyqb7"]
+[ext_resource type="Texture2D" uid="uid://cg0qierti43nb" path="res://textures/objects/BulletHole.png" id="1_kyqb7"]
 [ext_resource type="Script" path="res://scripts/objects/BulletHole.gd" id="2_bmp44"]
+[ext_resource type="Texture2D" uid="uid://y7fowireg5i" path="res://textures/objects/BulletNormalMap.png" id="2_fkc5d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ctrja"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_kyqb7")
+normal_enabled = true
+normal_texture = ExtResource("2_fkc5d")
+texture_filter = 0
 
 [node name="BulletHole" type="Sprite3D"]
+material_override = SubResource("StandardMaterial3D_ctrja")
 shaded = true
 texture_filter = 0
 texture = ExtResource("1_kyqb7")
