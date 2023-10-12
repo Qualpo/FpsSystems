@@ -15,9 +15,11 @@ extends CharacterBody3D
 @export var AirMultiplier = 0.15
 @export var SlideMultiplier = 0.1
 @export var SwimMultiplier = 0.4
+@export var SlideThreshold = 10.0
 @export var JumpForce = 4.0
-@export var Gravity = 0.163
+@export var Gravity = 9.8
 @export var StepSmooth = 0.2
+@export var CameraSmooth = 0.5
 @export var Sensitivity = 0.5
 @export var Bobset = Vector2()
 @export var StandHeight = 0.5
@@ -31,6 +33,7 @@ var NoClip = false
 
 var SensitivityScale = 1.0
 var Fov = 75.0
+
 var CameraDirection = Vector2()
 var Sprinting = false
 var Crouching = false
@@ -73,15 +76,15 @@ func _ready():
 
 func _physics_process(delta):
 
-	$CanvasLayer/Label.text = str(Vector2(velocity.x,velocity.z).length())
 	if LastCanUnCrouch != $CrouchCast.is_colliding():
 		if not $CrouchCast.is_colliding():
 			emit_signal("CanUnCrouch")
+	Bobset.y = clampf(Bobset.y ,-0.1,0.1)
 	LastCanUnCrouch = $CrouchCast.is_colliding()
 	Camera.h_offset = lerp(Camera.h_offset,Bobset.x,$AnimationPlayer.speed_scale)
 	Camera.v_offset = lerp(Camera.v_offset,Bobset.y,$AnimationPlayer.speed_scale * 0.5)
-	rotation.y = lerp_angle(rotation.y,deg_to_rad(CameraDirection.x),0.5) + deg_to_rad(CameraOffset.x)
-	Camera.rotation.x = lerp(Camera.rotation.x,deg_to_rad(CameraDirection.y),0.5) + deg_to_rad(CameraOffset.y)
+	rotation.y = lerp_angle(rotation.y,deg_to_rad(CameraDirection.x),CameraSmooth) + deg_to_rad(CameraOffset.x)
+	Camera.rotation.x = lerp(Camera.rotation.x,deg_to_rad(CameraDirection.y),CameraSmooth) + deg_to_rad(CameraOffset.y)
 	Camera.position = lerp(Camera.position,CameraPosition,StepSmooth)
 	Camera.fov = lerp(Camera.fov, Fov,0.1)
 	CameraOffset = lerp(CameraOffset,Vector2(),0.2)
@@ -89,8 +92,8 @@ func _physics_process(delta):
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.h_offset = Camera.h_offset
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.v_offset = Camera.v_offset
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.fov = Camera.fov
-	$CameraPivot/Camera3D/Item.rotation.y = lerp_angle($CameraPivot/Camera3D/Item.rotation.y,0.0,0.25)
-	$CameraPivot/Camera3D/Item.rotation.x = lerp_angle($CameraPivot/Camera3D/Item.rotation.x,0.0,0.25)
+	$CameraPivot/Camera3D/Item.rotation.y = lerp_angle($CameraPivot/Camera3D/Item.rotation.y,0.0,CameraSmooth/2)
+	$CameraPivot/Camera3D/Item.rotation.x = lerp_angle($CameraPivot/Camera3D/Item.rotation.x,0.0,CameraSmooth/2)
 	var inputDir = Input.get_vector("Left","Right","Foreward","Backward")
 	var rotInputDir = inputDir.rotated(deg_to_rad(-CameraDirection.x))
 	
@@ -101,7 +104,7 @@ func _physics_process(delta):
 		if SprintEnabled:
 			UnSprint()
 	if Input.is_action_just_pressed("Crouch"):
-		if inputDir != Vector2() and velocity.length() > 10 and is_on_floor() and SlideEnabled:
+		if (inputDir != Vector2() and velocity.length() > SlideThreshold) and is_on_floor() and SlideEnabled:
 			Slide()
 		else:
 			Crouch()
@@ -125,6 +128,8 @@ func _physics_process(delta):
 				if CanLand:
 					Land(AirTime)
 			AirTime = 0.0
+			if JumpBuffer > 0:
+				JumpBuffer -= delta
 			if not Sliding:
 				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),GroundFriction)
 				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed
@@ -132,10 +137,11 @@ func _physics_process(delta):
 				velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),SlideFriction)
 				velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * SlideMultiplier
 				SetFov(velocity.length() *2)
-				if velocity.length() < 5:
+				if velocity.length() < SlideThreshold/2.0:
 					UnSlide()
 			if inputDir.length() > 0:
 				if not Sliding:
+
 					$AnimationPlayer.speed_scale = (inputDir.length() * 0.5) - (int(Crouching) * 0.2) + (int(Sprinting) * 0.25)
 					$AnimationPlayer.play("Walk")
 					if Sprinting:
@@ -152,6 +158,9 @@ func _physics_process(delta):
 			if Input.is_action_pressed("Jump"):
 				if JumpBuffer <= 0.0 and JumpEnabled:
 					Jump()
+#			if PastSlideAngle:
+#				if $FloorCast.is_colliding():
+#					velocity += ($FloorCast.get_collision_normal(0)- up_direction) * Gravity
 		else:
 			JumpBuffer -= delta
 			if Sliding:
@@ -163,7 +172,7 @@ func _physics_process(delta):
 			Bobset.y = velocity.y/16
 			velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),AirFriction)
 			velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * AirMultiplier
-		velocity.y -= Gravity
+		velocity.y -= Gravity * delta
 
 	else:
 		$AnimationPlayer.stop(true)
@@ -182,7 +191,7 @@ func _physics_process(delta):
 		elif  Swimming:
 			velocity = lerp(velocity,Vector3(0.0,0.0,0.0),SwimFriction)
 			velocity += rotInputDir * WalkSpeed * SwimMultiplier
-			velocity.y -= Gravity * 0.5
+			velocity.y -= Gravity * 0.2 * delta
 
 	LastPos = position
 	move_and_slide()
@@ -191,15 +200,25 @@ func _physics_process(delta):
 			var dist = position.y - LastPos.y
 			
 			Camera.position.y -= dist 
+			Camera.position.y = clampf(Camera.position.y,-0.6,1.6)
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.global_transform= Camera.global_transform
 func _input(event):
 	if event is InputEventMouseMotion:
 		MoveCamera(Vector2(-event.relative.x,-event.relative.y))
 	elif event.is_action_pressed("Flashlight"):
 		$CameraPivot/Camera3D/Flashlight.visible = !$CameraPivot/Camera3D/Flashlight.visible
+	elif event is InputEventKey:
+		if  event.pressed and event.keycode ==  KEY_V:
+			if NoClip:
+				DisableNoClip()
+			else:
+				EnableNoClip()
 func EnableNoClip():
 	collision_mask = 0
 	NoClip = true
+func DisableNoClip():
+	collision_mask = 1
+	NoClip = false
 func Sprint():
 	if not Crouching and not Sliding and not Swimming:
 		MoveSpeed = WalkSpeed * SprintMultiplier
@@ -299,7 +318,8 @@ func SetFov(fov):
 	Fov = fov + 75.0
 func SetMovementSpeed(speed):
 	MoveSpeed = WalkSpeed * speed
-
+func SetSensitivityScale(sens):
+	SensitivityScale = sens
 
 func EnableSwimming():
 	Swimming = true
