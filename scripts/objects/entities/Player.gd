@@ -22,11 +22,13 @@ extends CharacterBody3D
 @export var CameraSmooth = 0.5
 @export var Sensitivity = 0.5
 @export var Bobset = Vector2()
-@export var StandHeight = 0.5
-@export var CrouchHeight = -0.5
+@export var StandHeight = 0.8
+@export var CrouchHeight = -0.2
 
 @onready var MoveSpeed = WalkSpeed
 @onready var Camera : Camera3D = $CameraPivot/Camera3D
+@onready var Body : Node3D = $CameraPivot/Camera3D/Body
+@onready var ItemNode : Node3D = $CameraPivot/Camera3D/Item
 
 var NoClip = false
 
@@ -92,8 +94,9 @@ func _physics_process(delta):
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.h_offset = Camera.h_offset
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.v_offset = Camera.v_offset
 	$CanvasLayer/SubViewportContainer/SubViewportContainer/ItemCamera.fov = Camera.fov
-	$CameraPivot/Camera3D/Item.rotation.y = lerp_angle($CameraPivot/Camera3D/Item.rotation.y,0.0,CameraSmooth/2)
-	$CameraPivot/Camera3D/Item.rotation.x = lerp_angle($CameraPivot/Camera3D/Item.rotation.x,0.0,CameraSmooth/2)
+	ItemNode.rotation.y = lerp_angle(ItemNode.rotation.y,0.0,CameraSmooth/2)
+	ItemNode.rotation.x = lerp_angle(ItemNode.rotation.x,0.0,CameraSmooth/2)
+	Body.global_rotation = Vector3(0.0,Body.global_rotation.y,0.0)
 	var inputDir = Input.get_vector("Left","Right","Foreward","Backward")
 	var rotInputDir = inputDir.rotated(deg_to_rad(-CameraDirection.x))
 	
@@ -266,16 +269,18 @@ func UnCrouch():
 	$CrouchShape.disabled = true
 	uncrouch.emit()
 func MoveCamera(vec : Vector2):
+	var cam = CameraDirection
 	CameraDirection.x += vec.x * Sensitivity * SensitivityScale
 	CameraDirection.y += vec.y * Sensitivity * SensitivityScale
 	CameraDirection.y = clamp(CameraDirection.y, -90.0,90.0)
-	$CameraPivot/Camera3D/Item.rotation.y -= deg_to_rad(vec.x* Sensitivity * SensitivityScale * 0.5)
-	$CameraPivot/Camera3D/Item.rotation.x -= deg_to_rad(vec.y* Sensitivity * SensitivityScale* 0.5)
+	ItemNode.rotation.y -= deg_to_rad(vec.x* Sensitivity * SensitivityScale * 0.5)
+	if cam.y != CameraDirection.y:
+		ItemNode.rotation.x -= deg_to_rad(vec.y* Sensitivity * SensitivityScale* 0.5)
 func ChangeHeldItem(item:Item):
 	
 	$CameraPivot/Camera3D/ItemAnimations.play("SelectItem")
-	if $CameraPivot/Camera3D/Item.get_child_count() > 0:
-		for c in $CameraPivot/Camera3D/Item.get_children():
+	if ItemNode.get_child_count() > 0:
+		for c in ItemNode.get_children():
 			c.queue_free()
 	if item != null:
 		var helditem = item.held_scene.instantiate()
@@ -283,7 +288,7 @@ func ChangeHeldItem(item:Item):
 		if CurHeldItem != null:
 			CurHeldItem.UnHold()
 		CurHeldItem = helditem
-		$CameraPivot/Camera3D/Item.add_child(helditem)
+		ItemNode.add_child(helditem)
 		
 func Jump():
 	

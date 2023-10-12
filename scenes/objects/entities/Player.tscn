@@ -106,6 +106,7 @@ radius = 0.4
 radius = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_76mnr"]
+height = 1.4
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 64
@@ -113,14 +114,12 @@ collision_mask = 33
 floor_snap_length = 0.5
 script = ExtResource("1_lx1yv")
 SlideMultiplier = 0.08
-CameraSmooth = 0.4
-
-[node name="ShadowModel" type="Node3D" parent="."]
+CameraSmooth = 0.3
 
 [node name="CameraPivot" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
 cull_mask = 1048573
 fov = 37.8493
 
@@ -147,6 +146,8 @@ light_specular = 0.16
 shadow_enabled = true
 spot_range = 812.75
 spot_angle_attenuation = 1.10957
+
+[node name="Body" type="Node3D" parent="CameraPivot/Camera3D"]
 
 [node name="StandShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
@@ -259,11 +260,11 @@ collision_mask = 8
 shape = SubResource("CylinderShape3D_3rlov")
 
 [node name="SwimBox" type="Area3D" parent="."]
-visible = false
 collision_layer = 0
 collision_mask = 16
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SwimBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("CapsuleShape3D_76mnr")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
