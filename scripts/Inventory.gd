@@ -21,9 +21,11 @@ func Unequip():
 	CurItem = -1
 	ItemChanged.emit(null)
 func SelectItem(index:int):
-	if index < Items.size() and index >= -1:
-		CurItem = index
-		ItemChanged.emit(Items[index])
+	if index < Items.size() and index > -1:
+			CurItem = index
+			ItemChanged.emit(Items[index])
+	else:
+		Unequip()
 func AddItem(item:Item):
 	if item != null:
 		Items.append(item)
@@ -38,6 +40,7 @@ func RemoveItemAtIndex(index:int):
 			if CurItem == index:
 				CurItem -= 1
 		Items.remove_at(index)
+		SelectItem(CurItem)
 func _input(event):
 	if event.is_action_pressed("ScrollUp"):
 		var nitem = CurItem + 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bvrirjbowjnt2"]
+[gd_scene load_steps=20 format=3 uid="uid://bvrirjbowjnt2"]
 
 [ext_resource type="Script" path="res://scripts/levels/DebugLevel.gd" id="1_1dn7h"]
 [ext_resource type="Texture2D" uid="uid://day5tbnhmhkux" path="res://textures/environment/-0FIFTIES_F01.bmp" id="3_63s8b"]
@@ -8,6 +8,92 @@
 [ext_resource type="PackedScene" uid="uid://bwb4gx26mui83" path="res://scenes/objects/interactables/Button.tscn" id="6_sb2xa"]
 [ext_resource type="PackedScene" uid="uid://bu41ag253hq3x" path="res://items/TestItem/TestItemPickup.tscn" id="8_7nrl2"]
 [ext_resource type="PackedScene" uid="uid://c4vdfrao81sth" path="res://items/Gun/GunItemPickup.tscn" id="9_orjuw"]
+[ext_resource type="Texture2D" uid="uid://buj03x1i43yig" path="res://textures/environment/skyboxes/AllSkyFree_Sky_ColdSunset_Equirect.png" id="9_qhrj5"]
+
+[sub_resource type="Shader" id="Shader_5bhj5"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.1.2.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_nearest,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_nearest,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_nearest,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform sampler2D texture_normal : hint_roughness_normal,filter_nearest,repeat_enable;
+uniform float normal_scale : hint_range(-16,16);
+varying vec3 uv1_triplanar_pos;
+uniform float uv1_blend_sharpness;
+varying vec3 uv1_power_normal;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform sampler2D reflection_texture;
+
+
+void vertex() {
+	TANGENT = vec3(0.0,0.0,-1.0) * abs(NORMAL.x);
+	TANGENT+= vec3(1.0,0.0,0.0) * abs(NORMAL.y);
+	TANGENT+= vec3(1.0,0.0,0.0) * abs(NORMAL.z);
+	TANGENT = normalize(TANGENT);
+	BINORMAL = vec3(0.0,1.0,0.0) * abs(NORMAL.x);
+	BINORMAL+= vec3(0.0,0.0,-1.0) * abs(NORMAL.y);
+	BINORMAL+= vec3(0.0,1.0,0.0) * abs(NORMAL.z);
+	BINORMAL = normalize(BINORMAL);
+	uv1_power_normal=pow(abs(NORMAL),vec3(uv1_blend_sharpness));
+	uv1_triplanar_pos = VERTEX * uv1_scale + uv1_offset;
+	uv1_power_normal/=dot(uv1_power_normal,vec3(1.0));
+	uv1_triplanar_pos *= vec3(1.0,-1.0, 1.0);
+}
+
+
+
+
+vec4 triplanar_texture(sampler2D p_sampler,vec3 p_weights,vec3 p_triplanar_pos) {
+	vec4 samp=vec4(0.0);
+	samp+= texture(p_sampler,p_triplanar_pos.xy) * p_weights.z;
+	samp+= texture(p_sampler,p_triplanar_pos.xz) * p_weights.y;
+	samp+= texture(p_sampler,p_triplanar_pos.zy * vec2(-1.0,1.0)) * p_weights.x;
+	return samp;
+}
+
+
+void fragment() {
+	vec4 albedo_tex = triplanar_texture(texture_albedo,uv1_power_normal,uv1_triplanar_pos);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(triplanar_texture(texture_metallic,uv1_power_normal,uv1_triplanar_pos),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(triplanar_texture(texture_roughness,uv1_power_normal,uv1_triplanar_pos),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	NORMAL_MAP = triplanar_texture(texture_normal,uv1_power_normal,uv1_triplanar_pos).rgb;
+	NORMAL_MAP_DEPTH = normal_scale;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_girp5"]
+render_priority = 0
+shader = SubResource("Shader_5bhj5")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.2
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/normal_scale = 0.4
+shader_parameter/uv1_blend_sharpness = 1.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_albedo = ExtResource("3_63s8b")
+shader_parameter/texture_normal = ExtResource("4_y4i2l")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w6xil"]
 diffuse_mode = 3
@@ -49,14 +135,17 @@ transparency = 1
 cull_mode = 2
 albedo_color = Color(0.352941, 0.364706, 0.631373, 0.337255)
 
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_834u5"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_f36dd"]
+panorama = ExtResource("9_qhrj5")
+filter = false
 
 [sub_resource type="Sky" id="Sky_unnii"]
-sky_material = SubResource("PhysicalSkyMaterial_834u5")
+sky_material = SubResource("PanoramaSkyMaterial_f36dd")
 
 [sub_resource type="Environment" id="Environment_fdttu"]
 background_mode = 2
 sky = SubResource("Sky_unnii")
+sky_rotation = Vector3(0, -0.959931, 0)
 ambient_light_source = 3
 reflected_light_source = 2
 ssao_enabled = true
@@ -70,7 +159,7 @@ script = ExtResource("1_1dn7h")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 0, 0)
-material_override = SubResource("StandardMaterial3D_w6xil")
+material_override = SubResource("ShaderMaterial_girp5")
 use_collision = true
 size = Vector3(165, 1, 14)
 
@@ -201,10 +290,28 @@ use_collision = true
 size = Vector3(1.8, 1.4, 1.6)
 
 [node name="CSGBox3D19" type="CSGBox3D" parent="Level"]
-transform = Transform3D(-4.37114e-08, 0.707107, 0.707107, -3.84874e-15, 0.707107, -0.707107, -1, -3.09086e-08, -3.09086e-08, 13.5, 3.3, 2)
+transform = Transform3D(-4.2222e-08, 0.430511, 0.902586, -1.13133e-08, 0.902586, -0.430511, -1, -2.83883e-08, -3.32384e-08, 20.5, 8.1, 2)
 material_override = SubResource("StandardMaterial3D_w6xil")
 use_collision = true
-size = Vector3(2, 10, 1.6)
+size = Vector3(2, 3.72, 1.6)
+
+[node name="CSGBox3D25" type="CSGBox3D" parent="Level"]
+transform = Transform3D(-4.37114e-08, 0.649448, 0.760406, -5.26854e-15, 0.760406, -0.649448, -1, -2.83883e-08, -3.32384e-08, 18.3, 4.8, 2)
+material_override = SubResource("StandardMaterial3D_w6xil")
+use_collision = true
+size = Vector3(2, 4.2, 1.6)
+
+[node name="CSGBox3D26" type="CSGBox3D" parent="Level"]
+transform = Transform3D(-4.22219e-08, 0.824126, 0.566406, 1.13133e-08, 0.566406, -0.824126, -1, -2.83883e-08, -3.32384e-08, 15.1, 1.9, 2)
+material_override = SubResource("StandardMaterial3D_w6xil")
+use_collision = true
+size = Vector3(2, 4.2, 1.6)
+
+[node name="CSGBox3D27" type="CSGBox3D" parent="Level"]
+transform = Transform3D(-3.78552e-08, 0.942641, 0.333807, 2.18557e-08, 0.333807, -0.942641, -1, -2.83883e-08, -3.32384e-08, 11.4, 6.70552e-08, 2)
+material_override = SubResource("StandardMaterial3D_w6xil")
+use_collision = true
+size = Vector3(2, 4.2, 1.6)
 
 [node name="CSGBox3D16" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9.1)
@@ -260,7 +367,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 environment = SubResource("Environment_fdttu")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-1.95435e-08, -0.965926, 0.258819, -0.258819, 0.25, 0.933013, -0.965926, -0.0669873, -0.25, 0, 6.1, 0)
+transform = Transform3D(0.606676, 0.217672, -0.764567, -0.00417752, 0.962641, 0.270749, 0.794938, -0.161063, 0.584921, 0, 6.1, 0)
 layers = 3
 shadow_enabled = true
 

@@ -111,6 +111,7 @@ height = 1.4
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 64
 collision_mask = 33
+floor_max_angle = 1.18682
 floor_snap_length = 0.5
 script = ExtResource("1_lx1yv")
 SlideMultiplier = 0.08
