@@ -16,7 +16,6 @@ extends CharacterBody3D
 @export var SlideMultiplier = 0.1
 @export var SwimMultiplier = 0.4
 @export var SlideThreshold = 10.0
-@export_range(0.0,180.0) var MaxSlideAngle = 45.0
 @export var JumpForce = 4.0
 @export var Gravity = 9.8
 @export var StepSmooth = 0.2
@@ -50,7 +49,6 @@ var CameraOffset = Vector2()
 var Swimming = false
 var CanLand = false
 
-var SteepSlide = false
 
 var WaterObject = null
 
@@ -71,6 +69,7 @@ signal unslide
 signal land 
 
 func _ready():
+	CameraPosition.y = StandHeight
 	Inventory.ItemChanged.connect(ChangeHeldItem)
 	Inventory.SelectItem(0)
 	CameraDirection = Vector2(rotation_degrees.y,Camera.rotation_degrees.x)
@@ -112,11 +111,8 @@ func _physics_process(delta):
 		if SprintEnabled:
 			UnSprint()
 	if Input.is_action_just_pressed("Crouch"):
-		if not SteepSlide:
-			if ((inputDir != Vector2() and velocity.length() > SlideThreshold) or (get_floor_angle() > 0.0)) and is_on_floor() and SlideEnabled:
-				Slide()
-			else:
-				Crouch()
+		if ((inputDir != Vector2() and velocity.length() > SlideThreshold) or (get_floor_angle() > 0.0)) and is_on_floor() and SlideEnabled:
+			Slide()
 		else:
 			Crouch()
 	if Input.is_action_just_released("Crouch"):
@@ -140,18 +136,6 @@ func _physics_process(delta):
 				if CanLand:
 					Land(AirTime)
 			AirTime = 0.0
-			if abs(rad_to_deg(get_floor_angle())) >= MaxSlideAngle:
-				SteepSlide = true
-				if not Sliding:
-					Slide()
-			else:
-				if get_floor_angle() == 0:
-					if SteepSlide:
-					
-						if not Crouching:
-							SteepUnCrouch()
-						else:
-							SteepSlide = false
 					
 			if JumpBuffer > 0:
 				JumpBuffer -= delta
@@ -258,7 +242,7 @@ func UnSprint():
 		unsprint.emit()
 func Crouch():
 	
-	if not SteepSlide:
+
 		print("crouch")
 		if not is_on_floor():
 			position.y += 0.5
@@ -270,8 +254,6 @@ func Crouch():
 		$StandShape.disabled = true
 		$CrouchShape.disabled = false
 		crouch.emit()
-	else:
-		Crouching = true
 func UnCrouch():
 	if not is_on_floor():
 		position.y -= 0.5
@@ -280,27 +262,21 @@ func UnCrouch():
 	if $CrouchCast.is_colliding():
 		await CanUnCrouch
 	
-	if not SteepSlide:
-		SetFov(0)
-		MoveSpeed = WalkSpeed
-		CameraPosition.y = StandHeight
-		if Sliding:
-		
-			if Sprinting:
-				Crouching = false
-				Sliding = false
-				Sprint()
-		Crouching = false
-		Sliding = false
-		$StandShape.disabled = false
-		$CrouchShape.disabled = true
-		uncrouch.emit()
-	else:
-		Crouching = false
-func SteepUnCrouch():
-	await unslide
-	SteepSlide = false
-	UnCrouch()
+	SetFov(0)
+	MoveSpeed = WalkSpeed
+	CameraPosition.y = StandHeight
+	if Sliding:
+	
+		if Sprinting:
+			Crouching = false
+			Sliding = false
+			Sprint()
+	Crouching = false
+	Sliding = false
+	$StandShape.disabled = false
+	$CrouchShape.disabled = true
+	uncrouch.emit()
+
 func MoveCamera(vec : Vector2):
 	var cam = CameraDirection
 	CameraDirection.x += vec.x * Sensitivity * SensitivityScale
@@ -346,18 +322,10 @@ func Slide():
 	$CrouchShape.disabled = false
 	$LandSound.play()
 func UnSlide():
-	
-	if not SteepSlide:
+	if not $CrouchCast.is_colliding():
 		Crouch()
-		SetFov(0)
-		Sliding = false
-	else:
-		Sprinting = false
-		MoveSpeed = WalkSpeed
-		SteepSlide = false
-		if not is_on_floor():
-			await land
-		UnCrouch()
+	SetFov(0)
+	Sliding = false
 	unslide.emit()
 
 func Pickup(area):
