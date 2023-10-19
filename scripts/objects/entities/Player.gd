@@ -180,7 +180,7 @@ func _physics_process(delta):
 			Bobset.y = velocity.y/16
 			velocity = lerp(velocity,Vector3(0.0,velocity.y,0.0),AirFriction)
 			velocity += Vector3(rotInputDir.x,0.0,rotInputDir.y) * MoveSpeed * AirMultiplier
-		velocity.y -= Gravity * delta
+			velocity.y -= Gravity * delta
 
 	else:
 		$AnimationPlayer.stop(true)
