@@ -35,10 +35,10 @@ height = 1.5
 radius = 0.415
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bjytw"]
-height = 0.6
+height = 0.5
 radius = 0.415
 
-[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_v2wag"]
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_gj0lv"]
 length = 0.5
 slide_on_slope = true
 
@@ -103,24 +103,31 @@ height = 0.5
 radius = 0.4
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_3rlov"]
+height = 0.5
 radius = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_76mnr"]
 height = 1.4
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("Camera", "Body", "ItemNode", "stand_shape", "crouch_shape")]
 collision_layer = 64
 collision_mask = 33
 floor_snap_length = 0.5
 script = ExtResource("1_lx1yv")
 SlideMultiplier = 0.08
+Camera = NodePath("CameraPivot/Camera3D")
+Body = NodePath("CameraPivot/Camera3D/Body")
+ItemNode = NodePath("CameraPivot/Camera3D/Item")
+stand_shape = NodePath("StandShape")
+crouch_shape = NodePath("CrouchShape")
 CameraSmooth = 0.3
 
 [node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.2)
-cull_mask = 1048573
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+cull_mask = 1048569
 fov = 37.8493
 
 [node name="InteractionCast" type="RayCast3D" parent="CameraPivot/Camera3D"]
@@ -134,9 +141,6 @@ libraries = {
 "": SubResource("AnimationLibrary_m3sok")
 }
 
-[node name="Item" type="Node3D" parent="CameraPivot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
-
 [node name="Flashlight" type="SpotLight3D" parent="CameraPivot/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.13)
 visible = false
@@ -147,97 +151,65 @@ shadow_enabled = true
 spot_range = 812.75
 spot_angle_attenuation = 1.10957
 
+[node name="Item" type="Node3D" parent="CameraPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+
 [node name="Body" type="Node3D" parent="CameraPivot/Camera3D"]
 
 [node name="StandShape" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 shape = SubResource("CylinderShape3D_2gt5c")
 
 [node name="CrouchShape" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("CylinderShape3D_bjytw")
 disabled = true
 
-[node name="Foot" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.5, 0)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.5, 0)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.415, -0.5, 0)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.415, 0.5, 0)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot3" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.415, -0.5, 0)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape5" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.415, 0.5, 0)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot4" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.5, 0.415)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.5, 0.415)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot5" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.5, -0.415)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.5, -0.415)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot6" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.159, -0.5, -0.383)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape6" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.293, 0.5, 0.293)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot7" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.159, -0.5, 0.383)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape7" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.293, 0.5, 0.293)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot8" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.159, -0.5, 0.383)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape8" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.293, 0.5, -0.293)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
-[node name="Foot9" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.159, -0.5, -0.383)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot10" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.383, -0.5, -0.159)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot11" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.383, -0.5, 0.159)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot12" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.383, -0.5, 0.159)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot13" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.383, -0.5, -0.159)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot14" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.293, -0.5, -0.293)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot15" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.293, -0.5, 0.293)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot16" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.293, -0.5, 0.293)
-shape = SubResource("SeparationRayShape3D_v2wag")
-
-[node name="Foot17" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.293, -0.5, -0.293)
-shape = SubResource("SeparationRayShape3D_v2wag")
+[node name="StepShape9" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.293, 0.5, -0.293)
+shape = SubResource("SeparationRayShape3D_gj0lv")
 
 [node name="WalkSound" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 stream = ExtResource("2_63stx")
 max_polyphony = 2
 
 [node name="JumpSound" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 stream = ExtResource("3_4urpi")
 max_polyphony = 2
 
 [node name="LandSound" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 stream = ExtResource("4_n57pj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -247,19 +219,21 @@ libraries = {
 }
 
 [node name="CrouchCast" type="ShapeCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
 shape = SubResource("CylinderShape3D_k8oh8")
 target_position = Vector3(0, 1, 0)
 
 [node name="PickupBox" type="Area3D" parent="."]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 collision_layer = 0
 collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PickupBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.65, 0)
 shape = SubResource("CylinderShape3D_3rlov")
 
 [node name="SwimBox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 collision_layer = 0
 collision_mask = 16
 
@@ -285,7 +259,7 @@ size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="ItemCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewportContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 cull_mask = 2
 
 [node name="Label" type="Label" parent="CanvasLayer"]

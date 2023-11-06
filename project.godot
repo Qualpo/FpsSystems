@@ -26,6 +26,10 @@ window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray()
+
 [input]
 
 Sprint={
@@ -101,6 +105,9 @@ DropItem={
 
 [layer_names]
 
+3d_render/layer_1="Environment"
+3d_render/layer_2="Viewmodel"
+3d_render/layer_3="Lighting"
 3d_physics/layer_1="Level"
 3d_physics/layer_2="Entities"
 3d_physics/layer_3="Interactables"

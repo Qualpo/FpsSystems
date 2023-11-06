@@ -1,23 +1,39 @@
 extends CharacterBody3D
 
+@export_category("Toggles")
 @export var SprintEnabled = true
 @export var SlideEnabled = true
 @export var JumpEnabled = true
 
+@export_category("Movement Options")
+@export var SlideThreshold = 10.0
+@export var JumpForce = 4.0
+@export var Gravity = 9.8
 
+@export_subgroup("Friction")
 @export var GroundFriction = 0.08
 @export var AirFriction = 0.01
 @export var SlideFriction = 0.01
 @export var SwimFriction = 0.04
+
+@export_subgroup("Speed and Speed Multipliers")
 @export var CrouchSpeed = 0.3
 @export var WalkSpeed = 0.8
 @export var SprintMultiplier = 2.0
 @export var AirMultiplier = 0.15
 @export var SlideMultiplier = 0.1
 @export var SwimMultiplier = 0.4
-@export var SlideThreshold = 10.0
-@export var JumpForce = 4.0
-@export var Gravity = 9.8
+
+
+@export_category("Nodes")
+@export var Camera : Camera3D
+@export var Body : Node3D
+@export var ItemNode : Node3D
+@export var stand_shape : CollisionShape3D
+@export var crouch_shape : CollisionShape3D
+
+
+@export_category("Misc")
 @export var StepSmooth = 0.2
 @export var CameraSmooth = 0.5
 @export var Sensitivity = 0.5
@@ -25,10 +41,9 @@ extends CharacterBody3D
 @export var StandHeight = 0.8
 @export var CrouchHeight = -0.2
 
+
 @onready var MoveSpeed = WalkSpeed
-@onready var Camera : Camera3D = $CameraPivot/Camera3D
-@onready var Body : Node3D = $CameraPivot/Camera3D/Body
-@onready var ItemNode : Node3D = $CameraPivot/Camera3D/Item
+
 
 var NoClip = false
 
@@ -261,6 +276,7 @@ func UnCrouch():
 
 	if $CrouchCast.is_colliding():
 		await CanUnCrouch
+	
 	
 	SetFov(0)
 	MoveSpeed = WalkSpeed

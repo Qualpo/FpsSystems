@@ -472,25 +472,25 @@ transform = Transform3D(-3.61999e-06, 0, -1, 0, 1, 0, 1, 0, -3.61999e-06, 0.5, -
 
 [node name="GunBase" type="MeshInstance3D" parent="Model/Gun/Node2" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0999992, -0.1, 0)
-layers = 2
+layers = 7
 mesh = SubResource("ArrayMesh_kx51q")
 skeleton = NodePath("")
 
 [node name="GunTop" type="MeshInstance3D" parent="Model/Gun/Node2" index="1"]
 transform = Transform3D(1, 0, 7.10543e-15, 0, 1, 0, 0, 0, 1, -0.0999992, -0.1, 0)
-layers = 2
+layers = 7
 mesh = SubResource("ArrayMesh_poukg")
 skeleton = NodePath("")
 
 [node name="Barrel" type="MeshInstance3D" parent="Model/Gun/Node2" index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0999992, -0.1, 0)
-layers = 2
+layers = 7
 mesh = SubResource("ArrayMesh_0mjdo")
 skeleton = NodePath("")
 
 [node name="cube" type="MeshInstance3D" parent="Model/Gun/Node2" index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0999992, -0.1, 0)
-layers = 2
+layers = 7
 mesh = SubResource("ArrayMesh_acplx")
 skeleton = NodePath("")
 
